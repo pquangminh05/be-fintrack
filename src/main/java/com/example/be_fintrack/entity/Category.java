@@ -3,15 +3,17 @@ package com.example.be_fintrack.entity;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "category") // thêm rõ ràng
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "name", columnDefinition = "NVARCHAR(255)")
     private String name;
 
-    private String type; // "income" hoặc "expense"
-
+    @Column(name = "type", columnDefinition = "NVARCHAR(50)")
+    private String type;
     // Getter, Setter
     public Long getId() {
         return id;

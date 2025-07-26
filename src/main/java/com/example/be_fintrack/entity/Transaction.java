@@ -1,8 +1,8 @@
 package com.example.be_fintrack.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-import java.time.LocalDate;
+        import lombok.*;
+        import java.time.LocalDate;
 
 @Entity
 @Table(name = "transactions")
@@ -23,7 +23,8 @@ public class Transaction {
 
     private Double amount;
 
-    private String note;
+    private String description;
+
 
     private LocalDate date;
 }

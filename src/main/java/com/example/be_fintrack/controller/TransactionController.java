@@ -38,6 +38,7 @@ public class TransactionController {
         return ResponseEntity.ok(service.update(id, t));
     }
 
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
@@ -48,4 +49,5 @@ public class TransactionController {
     public ResponseEntity<List<Transaction>> getByType(@PathVariable String type) {
         return ResponseEntity.ok(service.getByType(type));
     }
+
 }

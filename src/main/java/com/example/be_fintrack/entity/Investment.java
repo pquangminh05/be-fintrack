@@ -20,6 +20,7 @@ public class Investment {
     private double purchasePrice;
     private double currentPrice;
 
+
     private LocalDate purchaseDate;
 
     @ManyToOne

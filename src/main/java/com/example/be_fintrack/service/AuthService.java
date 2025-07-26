@@ -33,9 +33,9 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         userRepo.save(user);
 
-        // Sinh token trả về
+        // Sinh token trả về kèm username
         String token = jwtUtil.generateToken(user.getUsername());
-        return new AuthResponse(token);
+        return new AuthResponse(token, user.getUsername());
     }
 
     public AuthResponse login(AuthRequest request) {
@@ -48,8 +48,8 @@ public class AuthService {
             throw new RuntimeException("Invalid credentials");
         }
 
-        // Sinh token
+        // Sinh token kèm username
         String token = jwtUtil.generateToken(user.getUsername());
-        return new AuthResponse(token);
+        return new AuthResponse(token, user.getUsername());
     }
 }

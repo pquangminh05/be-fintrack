@@ -27,13 +27,26 @@ public class TransactionService {
     }
 
     public Transaction update(Long id, Transaction t) {
-        t.setId(id);
-        return transactionRepository.save(t);
+        Transaction existing = transactionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Transaction not found"));
+
+        // Cập nhật từng trường
+        existing.setAmount(t.getAmount());
+        existing.setType(t.getType());
+        existing.setDate(t.getDate());
+        existing.setDescription(t.getDescription());
+
+        return transactionRepository.save(existing);
     }
 
+
     public void delete(Long id) {
+        if (!transactionRepository.existsById(id)) {
+            throw new RuntimeException("Transaction not found");
+        }
         transactionRepository.deleteById(id);
     }
+
 
     public List<Transaction> getByType(String type) {
         return transactionRepository.findByType(type);

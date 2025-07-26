@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "users") // ✅ đặt lại tên bảng tránh dùng từ khóa SQL
+@Table(name = "users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

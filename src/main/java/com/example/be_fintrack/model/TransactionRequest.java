@@ -11,5 +11,5 @@ public class TransactionRequest {
     private LocalDate date;
     private Long categoryId;
     private String type;
-    private String note;
+
 }
