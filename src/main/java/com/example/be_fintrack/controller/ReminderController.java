@@ -22,9 +22,10 @@ public class ReminderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Reminder>> getByUser(@RequestParam Long userId) {
-        return ResponseEntity.ok(service.getByUser(userId));
+    public ResponseEntity<List<Reminder>> getByUsername(@RequestParam String username) {
+        return ResponseEntity.ok(service.getByUsername(username));
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Reminder> update(@PathVariable Long id, @RequestBody Reminder r) {
