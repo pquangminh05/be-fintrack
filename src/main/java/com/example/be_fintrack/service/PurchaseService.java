@@ -1,7 +1,9 @@
 package com.example.be_fintrack.service;
 
 import com.example.be_fintrack.entity.Purchase;
+import com.example.be_fintrack.entity.Transaction;
 import com.example.be_fintrack.repository.PurchaseRepository;
+import com.example.be_fintrack.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,10 +13,27 @@ import java.util.List;
 public class PurchaseService {
 
     @Autowired
+    private TransactionRepository transactionRepo;
+
+    @Autowired
     private PurchaseRepository repo;
 
     public Purchase create(Purchase p) {
-        return repo.save(p);
+        Purchase savedPurchase = repo.save(p);
+
+        // Sau khi mua sắm được lưu, tạo giao dịch CHI gắn với user
+        Transaction t = Transaction.builder()
+                .type("CHI")
+                .category("Mua sắm")
+                .amount(p.getPrice())
+                .description("Mua: " + p.getProductName())
+                .date(p.getPurchaseDate())
+                .user(p.getUser()) // Gán user cho transaction
+                .build();
+
+        transactionRepo.save(t);
+
+        return savedPurchase;
     }
 
     public List<Purchase> getByUser(Long userId) {
@@ -29,6 +48,7 @@ public class PurchaseService {
         p.setNote(newP.getNote());
         p.setProductLink(newP.getProductLink());
         p.setPurchaseDate(newP.getPurchaseDate());
+        p.setUser(newP.getUser()); // Đảm bảo user được cập nhật (nếu cần)
         return repo.save(p);
     }
 

@@ -35,7 +35,8 @@ public class AuthService {
 
         // Sinh token trả về kèm username
         String token = jwtUtil.generateToken(user.getUsername());
-        return new AuthResponse(token, user.getUsername());
+        return new AuthResponse(token, user.getUsername(), user.getId());
+
     }
 
     public AuthResponse login(AuthRequest request) {
@@ -50,6 +51,7 @@ public class AuthService {
 
         // Sinh token kèm username
         String token = jwtUtil.generateToken(user.getUsername());
-        return new AuthResponse(token, user.getUsername());
+        return new AuthResponse(token, user.getUsername(), user.getId());
+
     }
 }
