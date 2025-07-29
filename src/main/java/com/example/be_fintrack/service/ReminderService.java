@@ -18,20 +18,18 @@ public class ReminderService {
     @Autowired
     private UserRepository userRepository;
 
-    public Reminder create(Reminder r, User user) {
-        r.setUser(user);
+    public Reminder create(Reminder r) {
         return reminderRepository.save(r);
     }
 
-    public List<Reminder> getByUser(Long userId) {
-        return reminderRepository.findByUserId(userId);
+    public List<Reminder> getByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .map(user -> reminderRepository.findByUserId(user.getId()))
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng: " + username));
     }
 
-    public Reminder update(Long id, Reminder updated, User user) {
+    public Reminder update(Long id, Reminder updated) {
         Reminder r = reminderRepository.findById(id).orElseThrow();
-        if (!r.getUser().getId().equals(user.getId())) {
-            throw new RuntimeException("Permission denied");
-        }
         r.setTitle(updated.getTitle());
         r.setContent(updated.getContent());
         r.setRemindDate(updated.getRemindDate());
@@ -39,11 +37,7 @@ public class ReminderService {
         return reminderRepository.save(r);
     }
 
-    public void delete(Long id, User user) {
-        Reminder r = reminderRepository.findById(id).orElseThrow();
-        if (!r.getUser().getId().equals(user.getId())) {
-            throw new RuntimeException("Permission denied");
-        }
+    public void delete(Long id) {
         reminderRepository.deleteById(id);
     }
 }

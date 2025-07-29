@@ -6,10 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import com.example.be_fintrack.entity.User;
-
 import java.util.List;
 
 @RestController
@@ -22,31 +18,23 @@ public class ReminderController {
 
     @PostMapping
     public ResponseEntity<Reminder> create(@RequestBody Reminder r) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
-        return ResponseEntity.ok(service.create(r, user));
+        return ResponseEntity.ok(service.create(r));
     }
 
     @GetMapping
-    public ResponseEntity<List<Reminder>> getByUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
-        return ResponseEntity.ok(service.getByUser(user.getId()));
+    public ResponseEntity<List<Reminder>> getByUsername(@RequestParam String username) {
+        return ResponseEntity.ok(service.getByUsername(username));
     }
 
 
     @PutMapping("/{id}")
     public ResponseEntity<Reminder> update(@PathVariable Long id, @RequestBody Reminder r) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
-        return ResponseEntity.ok(service.update(id, r, user));
+        return ResponseEntity.ok(service.update(id, r));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
-        service.delete(id, user);
+        service.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

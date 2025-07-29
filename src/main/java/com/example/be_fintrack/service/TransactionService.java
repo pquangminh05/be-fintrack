@@ -22,36 +22,27 @@ public class TransactionService {
         return transactionRepository.findAll();
     }
 
-    public Optional<Transaction> getById(Long id, Long userId) {
-        Optional<Transaction> transaction = transactionRepository.findById(id);
-        if (transaction.isPresent() && transaction.get().getUser().getId().equals(userId)) {
-            return transaction;
-        }
-        return Optional.empty();
+    public Optional<Transaction> getById(Long id) {
+        return transactionRepository.findById(id);
     }
 
-    public Transaction update(Long id, Transaction t, Long userId) {
+    public Transaction update(Long id, Transaction t) {
         Transaction existing = transactionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Transaction not found"));
-        if (!existing.getUser().getId().equals(userId)) {
-            throw new RuntimeException("Permission denied");
-        }
+
         // Cập nhật từng trường
         existing.setAmount(t.getAmount());
         existing.setType(t.getType());
         existing.setDate(t.getDate());
         existing.setDescription(t.getDescription());
-        existing.setCategory(t.getCategory());
 
         return transactionRepository.save(existing);
     }
 
 
-    public void delete(Long id, Long userId) {
-        Transaction existing = transactionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Transaction not found"));
-        if (!existing.getUser().getId().equals(userId)) {
-            throw new RuntimeException("Permission denied");
+    public void delete(Long id) {
+        if (!transactionRepository.existsById(id)) {
+            throw new RuntimeException("Transaction not found");
         }
         transactionRepository.deleteById(id);
     }
@@ -59,9 +50,5 @@ public class TransactionService {
 
     public List<Transaction> getByType(String type) {
         return transactionRepository.findByType(type);
-    }
-
-    public List<Transaction> getByUser(Long userId) {
-        return transactionRepository.findByUserId(userId);
     }
 }
