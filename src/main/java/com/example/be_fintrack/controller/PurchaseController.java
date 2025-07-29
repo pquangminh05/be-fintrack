@@ -8,6 +8,9 @@ import com.example.be_fintrack.service.PurchaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -24,8 +27,8 @@ public class PurchaseController {
 
     @PostMapping
     public ResponseEntity<Purchase> create(@RequestBody PurchaseDTO dto) {
-        User user = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy user với id " + dto.getUserId()));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
 
         Purchase p = new Purchase();
         p.setProductName(dto.getProductName());
@@ -40,14 +43,16 @@ public class PurchaseController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Purchase>> getByUser(@RequestParam Long userId) {
-        return ResponseEntity.ok(service.getByUser(userId));
+    public ResponseEntity<List<PurchaseDTO>> getByUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(service.getDTOByUser(user.getId()));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Purchase> update(@PathVariable Long id, @RequestBody PurchaseDTO dto) {
-        User user = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy user với id " + dto.getUserId()));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
 
         Purchase p = new Purchase();
         p.setProductName(dto.getProductName());
@@ -58,12 +63,14 @@ public class PurchaseController {
         p.setPurchaseDate(LocalDate.parse(dto.getPurchaseDate()));
         p.setUser(user);
 
-        return ResponseEntity.ok(service.update(id, p));
+        return ResponseEntity.ok(service.update(id, p, user));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        service.delete(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        service.delete(id, user);
         return ResponseEntity.noContent().build();
     }
 }

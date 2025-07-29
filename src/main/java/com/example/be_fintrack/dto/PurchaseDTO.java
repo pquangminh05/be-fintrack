@@ -6,6 +6,7 @@ import java.time.LocalDate;
 
 @Data
 public class PurchaseDTO {
+    private Long id;
     private String productName;
     private double price;
     private String store;
@@ -13,6 +14,6 @@ public class PurchaseDTO {
     private String productLink;
     private String purchaseDate;
     private Long userId;
+    private String username;
     // getter + setter
 }
-
