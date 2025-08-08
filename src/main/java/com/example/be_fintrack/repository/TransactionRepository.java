@@ -10,4 +10,10 @@ import java.util.List;
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
     List<Transaction> findByType(String type);
     List<Transaction> findByUserId(Long userId);
+
+    // ✅ Thêm phương thức tìm theo type và userId
+    List<Transaction> findByTypeAndUserId(String type, Long userId);
+
+    // ✅ Thêm phương thức tìm theo userId và description chứa text
+    List<Transaction> findByUserIdAndDescriptionContaining(Long userId, String description);
 }

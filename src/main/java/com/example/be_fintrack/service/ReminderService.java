@@ -22,14 +22,22 @@ public class ReminderService {
         return reminderRepository.save(r);
     }
 
+    // ✅ Cập nhật để chỉ lấy reminder của user đó
     public List<Reminder> getByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .map(user -> reminderRepository.findByUserId(user.getId()))
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng: " + username));
+        return reminderRepository.findByUserId(user.getId());
+    }
+
+    // ✅ Thêm phương thức lấy theo userId
+    public List<Reminder> getByUserId(Long userId) {
+        return reminderRepository.findByUserId(userId);
     }
 
     public Reminder update(Long id, Reminder updated) {
-        Reminder r = reminderRepository.findById(id).orElseThrow();
+        Reminder r = reminderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy reminder với id: " + id));
+
         r.setTitle(updated.getTitle());
         r.setContent(updated.getContent());
         r.setRemindDate(updated.getRemindDate());
@@ -38,6 +46,9 @@ public class ReminderService {
     }
 
     public void delete(Long id) {
+        if (!reminderRepository.existsById(id)) {
+            throw new RuntimeException("Không tìm thấy reminder với id: " + id);
+        }
         reminderRepository.deleteById(id);
     }
 }

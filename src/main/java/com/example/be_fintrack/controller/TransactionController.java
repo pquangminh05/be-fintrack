@@ -21,8 +21,12 @@ public class TransactionController {
         return ResponseEntity.ok(service.create(t));
     }
 
+    // ✅ Thay đổi: API lấy tất cả giao dịch theo userId
     @GetMapping
-    public ResponseEntity<List<Transaction>> getAll() {
+    public ResponseEntity<List<Transaction>> getAll(@RequestParam(required = false) Long userId) {
+        if (userId != null) {
+            return ResponseEntity.ok(service.getByUserId(userId));
+        }
         return ResponseEntity.ok(service.getAll());
     }
 
@@ -38,16 +42,20 @@ public class TransactionController {
         return ResponseEntity.ok(service.update(id, t));
     }
 
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
 
+    // ✅ Thay đổi: API lấy theo loại và userId
     @GetMapping("/type/{type}")
-    public ResponseEntity<List<Transaction>> getByType(@PathVariable String type) {
+    public ResponseEntity<List<Transaction>> getByType(
+            @PathVariable String type,
+            @RequestParam(required = false) Long userId) {
+        if (userId != null) {
+            return ResponseEntity.ok(service.getByTypeAndUserId(type, userId));
+        }
         return ResponseEntity.ok(service.getByType(type));
     }
-
 }

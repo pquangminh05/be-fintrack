@@ -22,6 +22,11 @@ public class TransactionService {
         return transactionRepository.findAll();
     }
 
+    // ✅ Thêm phương thức lấy theo userId
+    public List<Transaction> getByUserId(Long userId) {
+        return transactionRepository.findByUserId(userId);
+    }
+
     public Optional<Transaction> getById(Long id) {
         return transactionRepository.findById(id);
     }
@@ -35,10 +40,10 @@ public class TransactionService {
         existing.setType(t.getType());
         existing.setDate(t.getDate());
         existing.setDescription(t.getDescription());
+        existing.setCategory(t.getCategory());
 
         return transactionRepository.save(existing);
     }
-
 
     public void delete(Long id) {
         if (!transactionRepository.existsById(id)) {
@@ -47,8 +52,12 @@ public class TransactionService {
         transactionRepository.deleteById(id);
     }
 
-
     public List<Transaction> getByType(String type) {
         return transactionRepository.findByType(type);
+    }
+
+    // ✅ Thêm phương thức lấy theo type và userId
+    public List<Transaction> getByTypeAndUserId(String type, Long userId) {
+        return transactionRepository.findByTypeAndUserId(type, userId);
     }
 }
