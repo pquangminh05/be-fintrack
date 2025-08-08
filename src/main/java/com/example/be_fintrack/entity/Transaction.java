@@ -17,12 +17,15 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String type; // income / expense
+    @Column(columnDefinition = "NVARCHAR(50)")
+    private String type;  // income / expense
 
+    @Column(columnDefinition = "NVARCHAR(100)")
     private String category;
 
     private Double amount;
 
+    @Column(columnDefinition = "NVARCHAR(500)")
     private String description;
 
     private LocalDate date;
